@@ -19,10 +19,12 @@
         </el-menu-item>
       </router-link> -->
 
-      <el-menu-item v-else :key="todo.name" :index="todo.name" @click="gotoRoute(todo.name)">
-        <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
-        <span slot='title'>{{ todo.meta.name }}</span>
-      </el-menu-item>
+      <router-link v-else tag="a" :to="{ name: todo.name }">
+        <el-menu-item :key="todo.name" :index="todo.name">
+            <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
+            <span>{{ todo.meta.name }}</span>
+        </el-menu-item>
+      </router-link>
     </template>
   </div>
 </template>

@@ -4,16 +4,15 @@ import router from './router/'
 import store from './store/index'
 
 import ElementUI from 'element-ui'
-import { Message } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
 import './assets/style/index.scss'
 
 import './plugins'
+import './router/check'
 
 Vue.config.productionTip = false
 
-Vue.prototype.$alert = Message;
+// console.log(router);
 
 Vue.use(ElementUI);
 

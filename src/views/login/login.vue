@@ -69,14 +69,12 @@ export default {
             }
         },
         async login() {
-            // console.log(this.loginForm);
-            // const data = await login(this.loginForm);
             const data = await this.$store.dispatch('login', this.loginForm);
 
             if(data) {
-              // console.log("login success");
-              this.$message.error('okokok');
-              // Message.error("asdasd");
+              this.$message.success('登陆成功～');
+
+              this.$router.push({ path: '/home'})
             }
         }
     }

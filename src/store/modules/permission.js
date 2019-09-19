@@ -18,9 +18,19 @@ export default {
     avatar: '',
     userid: 0,
     token: '',
-    name: ''
+    name: '',
+    get getToken() {
+      return localStorage.getItem('token')
+    }
   },
-  getters: {},
+  getters: {
+    // getToken: {
+    //   root: true,
+    //   handler() {
+    //     return localStorage.getItem('token')
+    //   }
+    // }
+  },
   mutations: {
     SET_AVATAR(state, avatar) {
       state.avatar = avatar
@@ -52,6 +62,8 @@ export default {
       state.userid = info.userid;
       state.avatar = info.avatar;
       state.name = info.name;
+
+      localStorage.setItem('token', info.token);
     }
   },
   actions: {
