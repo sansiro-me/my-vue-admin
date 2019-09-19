@@ -1,0 +1,66 @@
+<template>
+  <div class="menu-container">
+    <template v-for="todo in menu">
+      <el-submenu v-if="todo.children && todo.children.length > 0" :key="todo.name" :index="todo.name">
+        <template slot="title">
+          <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
+          <span>{{ todo.meta.name }}</span>
+        </template>
+
+        <el-menu-item-group>
+          <my-nav :menu="todo.children"></my-nav>
+        </el-menu-item-group>
+      </el-submenu>
+
+      <!-- <router-link v-else tag="a" :to="todo.path">
+        <el-menu-item :key="todo.name" :index="todo.name">
+          <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
+          <span slot='title'>{{ todo.meta.name }}</span>
+        </el-menu-item>
+      </router-link> -->
+
+      <el-menu-item v-else :key="todo.name" :index="todo.name" @click="gotoRoute(todo.name)">
+        <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
+        <span slot='title'>{{ todo.meta.name }}</span>
+      </el-menu-item>
+    </template>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'my-nav',
+  props: {
+    menu: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
+  },
+
+  mounted() {
+    console.log(this.menu);
+  },
+
+  methods: {
+    gotoRoute(name) {
+      this.$router.push({ name })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.el-menu-item,
+.el-submenu {
+  text-align: left;
+  font-weight: bold;
+
+  .side-icon {
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 15px;
+  }
+}
+</style>
