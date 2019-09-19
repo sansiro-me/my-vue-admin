@@ -4,7 +4,7 @@
       <el-submenu v-if="todo.children && todo.children.length > 0" :key="todo.name" :index="todo.name">
         <template slot="title">
           <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
-          <span>{{ todo.meta.name }}</span>
+          <span class="sidemenu-title">{{ todo.meta.name }}</span>
         </template>
 
         <el-menu-item-group>
@@ -14,8 +14,8 @@
 
       <router-link v-else tag="a" :to="{ name: todo.name }" :key="todo.name">
         <el-menu-item :index="todo.name">
-            <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
-            <span>{{ todo.meta.name }}</span>
+          <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
+          <span slot="title" class="sidemenu-title">{{ todo.meta.name }}</span>
         </el-menu-item>
       </router-link>
     </template>
@@ -39,9 +39,7 @@ export default {
   },
 
   methods: {
-    gotoRoute(name) {
-      this.$router.push({ name })
-    }
+
   }
 }
 </script>
@@ -53,9 +51,16 @@ export default {
   font-weight: bold;
 
   .side-icon {
-    margin-right: 10px;
+    display: inline-block;
+    width: 24px;
+    // margin-right: 10px;
     font-weight: bold;
     font-size: 15px;
+    text-align: center;
   }
+}
+
+.sidemenu-title {
+  margin-left: 8px;
 }
 </style>

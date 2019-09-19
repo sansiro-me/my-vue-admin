@@ -23,13 +23,15 @@
   left: 0;
   z-index: 100;
   overflow-x: hidden;
+  user-select: none;
+  
   .iconfont {
     margin-right: 8px;
     color: #fff;
     font-size: 18px;
   }
-  >div.menu-container>li.el-menu-item,
-  >div.menu-container>li.el-submenu>.el-submenu__title {
+  >div.menu-container li.el-menu-item,
+  >div.menu-container li.el-submenu>.el-submenu__title {
     border-bottom: 1px solid rgba(238, 238, 238, 0.1);
   }
   .el-menu-item {
@@ -85,9 +87,9 @@
       font-size: 16px;
   }
    .el-submenu__title {
-      &:hover {
-          background: none !important;
-      }
+      // &:hover {
+      //     background: none !important;
+      // }
       i.el-submenu__icon-arrow {
           color: #ddd;
           font-size: 15px;

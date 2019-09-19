@@ -9,8 +9,16 @@ router.beforeEach((to, from, next) => {
     // console.log(to);
     // console.log(from);
     // if(!from.name || (to.name !== from.name)) {
-      next();
     // }
+
+    if(!store.state.permission.userid) {
+      store.dispatch('permission/getInfo').then(() => {
+        next();
+      })
+    }
+    else {
+      next();
+    }
   }
   else {
     next({ path: '/login' })

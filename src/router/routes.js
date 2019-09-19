@@ -25,7 +25,7 @@ const routes = [
     component: layout,
     meta: {
       name: '管理',
-      icon: 'sliders'
+      icon: 'anchor'
     },
     children: [
       {

@@ -69,7 +69,7 @@ export default {
             }
         },
         async login() {
-            const data = await this.$store.dispatch('login', this.loginForm);
+            const data = await this.$store.dispatch('permission/login', this.loginForm);
 
             if(data) {
               this.$message.success('登陆成功～');
