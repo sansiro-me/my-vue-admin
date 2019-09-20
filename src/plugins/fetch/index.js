@@ -1,14 +1,57 @@
 import axios from 'axios'
-// import store from '@/store/index.js'
-// import baseURL from './baseUrl'
 import { Message } from 'element-ui'
 const http = new Object();
 
 const baseURL = '/blog_api';
 
+const queryStringify = (obj, prefix) => {
+  const pairs = [];
+
+  for (const key in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+      continue;
+    }
+
+    const value = obj[key];
+
+    if (typeof value === 'undefined') {
+      continue;
+    }
+
+    const enkey = encodeURIComponent(key);
+    let pair;
+
+    if (typeof value === 'object') {
+      pair = queryStringify(value, prefix ? prefix + '[' + enkey + ']' : enkey);
+    }
+    else {
+      pair = (prefix ? prefix + '[' + enkey + ']' : enkey) + '=' + encodeURIComponent(value);
+    }
+
+    pairs.push(pair);
+  }
+
+  return pairs.join('&');
+};
+
+
 var instance = axios.create({
   timeout: 5000,
   baseURL,
+  transformRequest: [function(data, headers) {
+    if(data instanceof FormData) {
+      return data;
+    }
+
+    if(data && data.__json__ === true) {
+      headers['Content-Type'] = 'application/json; charset=utf-8';
+      data.__json__ = undefined;
+
+      return JSON.stringify(data);
+    }
+
+    return queryStringify(data);
+  }],
   validateStatus(status) {
     switch (status) {
     case 400:
@@ -44,15 +87,17 @@ var instance = axios.create({
 })
 
 // 添加请求拦截器
-instance.interceptors.request.use(
-  function(config) {
+instance.interceptors.request.use(config => {
     // 请求头添加token
     // if (store.state.UserToken) {
     //   config.headers.Authorization = `Bearer ${store.state.UserToken}`
     // }
+    if (config.method === 'get') {
+      config.params = config.data;
+    }
+  
     return config
-  },
-  function(error) {
+  }, error => {
     return Promise.reject(error)
   }
 )
@@ -75,20 +120,20 @@ instance.interceptors.response.use(
   }
 )
 
-http.get = function(url, options) {
+http.get = function(url, data) {
   // let loading
-  if (!options || options.isShowLoading !== false) {
+  // if (!options || options.isShowLoading !== false) {
     // loading = document.getElementById('ajaxLoading')
     // loading.style.display = 'block'
-  }
+  // }
   return new Promise((resolve, reject) => {
     instance
-      .get(url, options)
+      .get(url, data)
       .then(response => {
-        if (!options || options.isShowLoading !== false) {
-          // loading = document.getElementById('ajaxLoading')
-          // loading.style.display = 'none'
-        }
+        // if (!options || options.isShowLoading !== false) {
+        //   // loading = document.getElementById('ajaxLoading')
+        //   // loading.style.display = 'none'
+        // }
         if (response.code === 0) {
           resolve({
             isSuccess: true,
@@ -117,7 +162,7 @@ http.get = function(url, options) {
   })
 }
 
-http.post = function(url, data, options) {
+http.post = function(url, options) {
   // let loading
   if (!options || options.isShowLoading !== false) {
     // loading = document.getElementById('ajaxLoading')
@@ -125,7 +170,7 @@ http.post = function(url, data, options) {
   }
   return new Promise((resolve, reject) => {
     instance
-      .post(url, data, options)
+      .post(url, options.data ? options.data : '', options)
       .then(response => {
         if (!options || options.isShowLoading !== false) {
           // loading = document.getElementById('ajaxLoading')

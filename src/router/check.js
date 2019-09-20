@@ -6,11 +6,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
   else if(store.state.permission.getToken) {
-    // console.log(to);
-    // console.log(from);
-    // if(!from.name || (to.name !== from.name)) {
-    // }
-
     if(!store.state.permission.userid) {
       store.dispatch('permission/getInfo').then(() => {
         next();
@@ -23,5 +18,9 @@ router.beforeEach((to, from, next) => {
   else {
     next({ path: '/login' })
   }
-  // console.log(to);
+})
+
+router.afterEach((to) => {
+  store.commit('permission/setCrumbList', to.matched)
+  store.commit('permission/setCurrentMenu', to.name)
 })

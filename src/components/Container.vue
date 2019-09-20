@@ -17,8 +17,7 @@ import TopnavBar from '@/components/TopnavBar';
 import SideMenu from '@/components/SideMenu';
 
 import { mapState } from 'vuex'
-
-import menus from '@/filter/real-menu'
+import menus from '@/router/routes'
 
 export default {
   data() {
@@ -30,9 +29,8 @@ export default {
   components: { TopnavBar, SideMenu },
 
   computed: {
-    // ...mapState(['isSidebarNavCollapse']),
     ...mapState(['isSidebarNavCollapse']),
-    ...mapState('permission', ['sidebarMenu', 'currentMenu'])
+    ...mapState('permission', ['currentMenu'])
   },
 
   methods: {
@@ -41,4 +39,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main-container {
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+.content {
+  text-align: left;
+}
 </style>

@@ -11,13 +11,33 @@ const routes = [
     }
   },
   {
-    path: 'list',
-    name: 'list',
-    component:() => import('@/views/list/list'),
+    path: 'user',
+    name: 'user',
+    component: layout,
     meta: {
-      name: '订单管理',
+      name: '用户管理',
       icon: 'shopping-bag'
-    }
+    },
+    children: [
+      {
+        path: 'manage',
+        name: 'user-manage',
+        component:() => import('@/views/user/manage'),
+        meta: {
+          name: '用户列表',
+          icon: 'eye'
+        }
+      },
+      {
+        path: 'center',
+        name: 'user-center',
+        component:() => import('@/views/user/center'),
+        meta: {
+          name: '个人中心',
+          icon: 'user'
+        }
+      }
+    ]
   },
   {
     path: 'works',

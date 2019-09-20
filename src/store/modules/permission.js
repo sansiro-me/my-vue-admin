@@ -4,13 +4,14 @@
 // import dynamicRouter from '@/router/dynamic-router'
 
 import { login, getUserInfo } from '@/request/permission'
+import routes from '@/router/routes'
 
 export default {
   namespaced: true,
   state: {
     permissionList: null /** 所有路由 */,
     sidebarMenu: [] /** 导航菜单 */,
-    currentMenu: '' /** 当前active导航菜单 */,
+    // currentMenu: '' /** 当前active导航菜单 */,
     control_list: [] /** 完整的权限列表 */,
     // avatar: ''/** 头像 */,
     account: ''/** 用户角色 */,
@@ -21,7 +22,10 @@ export default {
     name: '',
     get getToken() {
       return localStorage.getItem('token')
-    }
+    },
+    crumbList: [],
+    menuList: [],
+    currentMenu: ''
   },
   getters: {
     // getToken: {
@@ -50,9 +54,6 @@ export default {
     CLEAR_MENU(state) {
       state.sidebarMenu = []
     },
-    SET_CURRENT_MENU(state, currentMenu) {
-      state.currentMenu = currentMenu
-    },
     SET_CONTROL_LIST(state, list) {
       state.control_list = list
     },
@@ -70,7 +71,16 @@ export default {
     logout(state) {
       state.token = '';
       localStorage.removeItem('token');　　
-    }
+    },
+    setCrumbList(state, list) {
+      state.crumbList = list
+    },
+    setMenuList(state, list) {
+      state.menuList = list
+    },
+    setCurrentMenu(state, currentMenu) {
+      state.currentMenu = currentMenu
+    },
   },
   actions: {
     async login({ commit }, obj) {
@@ -78,6 +88,7 @@ export default {
 
       if(isSuccess) {
         commit('setLoginInfo', data);
+        commit('setMenuList', routes);
         return true;
       }
       else {

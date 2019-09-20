@@ -15,7 +15,7 @@
       <router-link v-else tag="a" :to="{ name: todo.name }" :key="todo.name">
         <el-menu-item :index="todo.name">
           <span v-if="todo.meta && todo.meta.icon" class="side-icon" :class="'icon-' + todo.meta.icon"></span>
-          <span slot="title" class="sidemenu-title">{{ todo.meta.name }}</span>
+          <span class="sidemenu-title">{{ todo.meta.name }}</span>
         </el-menu-item>
       </router-link>
     </template>
@@ -32,14 +32,6 @@ export default {
         return []
       }
     }
-  },
-
-  mounted() {
-    console.log(this.menu);
-  },
-
-  methods: {
-
   }
 }
 </script>

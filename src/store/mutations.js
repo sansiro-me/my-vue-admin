@@ -8,10 +8,10 @@ export default {
   toggleNavCollapse(state) {
     state.isSidebarNavCollapse = !state.isSidebarNavCollapse
   },
-  setCrumbList(state, list) {
-    state.crumbList = list
-  },
-  setMenuList(state, list) {
-    state.menuList = list
-  }
+  // setCrumbList(state, list) {
+  //   state.crumbList = list
+  // },
+  // setMenuList(state, list) {
+  //   state.menuList = list
+  // }
 }

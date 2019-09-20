@@ -3,16 +3,14 @@
     <span class="icon-arrow-left toggleNavCollapse" :class="{active:isSidebarNavCollapse}" @click="toggleNavCollapse" >
     </span>
 
-    <el-breadcrumb separator="/">
-      <transition-group name="breadcrumb">
-        <!-- <template v-for="(route,i) in crumbList">
-          <el-breadcrumb-item :key="route.name" :to="{name:route.name}" v-if="route.name!='home' && route.meta.name!='首页'" :class="{'is-last-link':i==crumbList.length-1}">
-            {{route.meta.name}}
-          </el-breadcrumb-item>
-        </template> -->
-        <el-breadcrumb-item>人才</el-breadcrumb-item>
-        <el-breadcrumb-item class="is-last-link">管理</el-breadcrumb-item>
-      </transition-group>
+    <el-breadcrumb separator="/" class="el-breadcrumb">
+      <!-- <transition-group name="breadcrumb"> -->
+        <template v-for="(todo, index) in crumbList">
+          <el-breadcrumb-item :key="index" v-if="todo.name != 'container'"> {{todo.meta.name}} </el-breadcrumb-item>
+        </template>
+        <!-- <el-breadcrumb-item>人才</el-breadcrumb-item>
+        <el-breadcrumb-item>管理</el-breadcrumb-item> -->
+      <!-- </transition-group> -->
     </el-breadcrumb>
 
     <div class="aside-top-right">
@@ -48,8 +46,8 @@ export default {
     return {}
   },
   computed: {
-    ...mapState(['isSidebarNavCollapse', 'crumbList']),
-    ...mapState('permission', ['avatar', 'name'])
+    ...mapState(['isSidebarNavCollapse']),
+    ...mapState('permission', ['avatar', 'name', 'crumbList'])
   },
   methods: {
     toggleNavCollapse() {
@@ -85,7 +83,7 @@ export default {
   left: 200px;
   top: 0;
   right: 0;
-  background: rgb(255, 209, 209);
+  background: #f8f8f8;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -100,7 +98,7 @@ export default {
     vertical-align: middle;
     color: #333;
     cursor: pointer;
-    transition: all 0.5s;
+    transition: all 0.4s;
 
     &.active {
       transform: rotate(180deg);
@@ -165,20 +163,25 @@ export default {
   }
 }
 
-// .breadcrumb-enter,
-// .breadcrumb-leave-active {
-//     opacity: 0;
-//     transform: translateX(20px);
-// }
+.el-breadcrumb {
+  flex-grow: 1;
+  margin-top: 2px;
+}
 
-// .breadcrumb-enter-active,
-// .breadcrumb-leave-active {
-//     transition: all 0.6s;
-// }
+.breadcrumb-enter,
+.breadcrumb-leave-active {
+    opacity: 0;
+    transform: translateX(20px);
+}
 
-// .breadcrumb-leave-active {
-//     position: absolute;
-// }
+.breadcrumb-enter-active,
+.breadcrumb-leave-active {
+    transition: all 0.6s;
+}
+
+.breadcrumb-leave-active {
+    position: absolute;
+}
 
 .quit-system {
   .icon-power {
