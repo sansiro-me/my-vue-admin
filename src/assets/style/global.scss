@@ -196,6 +196,44 @@
       }
   }
 
+.el-drawer {
+  // width: unset !important;
+
+  &.small {
+    width: 400px !important;
+  }
+
+  &.medium {
+    width: 600px !important;
+  }
+
+  &.big {
+    width: 800px !important;
+  }
+}
+.el-drawer__body {
+  padding: 20px;
+
+  .demo-drawer__content {
+    display: flex;
+    flex-direction: column;
+    // height: 100%;
+    width: 600px;
+
+    &.small {
+      width: 400px;
+    }
+
+    &.big {
+      width: 800px;
+    }
+  }
+
+  .demo-drawer__footer {
+    display: flex;
+  }
+}
+
   
   
   

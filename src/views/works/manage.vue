@@ -1,5 +1,4 @@
 <template>
-  
   <div class="all">
     123123123
   </div>

@@ -15,6 +15,7 @@
 
         <el-form-item>
           <el-button type="primary" size="medium" @click="onSubmit">查询</el-button>
+          <el-button size="medium" @click="dialog = true">新增用户</el-button>
         </el-form-item>
       </el-form>
 
@@ -51,7 +52,7 @@
 
         <el-table-column label="备注" min-width="300">
           <template slot-scope="scope">
-            <span>{{ scope.row.description }}你是啊实打实的爱上爱上爱上你是啊实打实的爱上爱上爱上你是啊实打实的爱上爱上爱上你是啊实打实的爱上爱上爱上</span>
+            <span>{{ scope.row.description }}</span>
           </template>
         </el-table-column>
 
@@ -63,21 +64,65 @@
         </el-table-column>
       </el-table>
     </el-main>
+
+    <el-drawer
+      title="新增用户"
+      :visible.sync="dialog"
+      ref="drawer"
+      :wrapperClosable="false"
+      custom-class="medium"
+      :destroy-on-close="true"
+    >
+      <el-form :model="form" label-width="80px" :rules="formRules">
+        <el-form-item label="用户名称" prop="name">
+          <el-input type="text" v-model="form.name" maxlength="10" show-word-limit />
+        </el-form-item>
+
+        <el-form-item label="用户头像" prop="avatar">
+          <el-input v-model="form.avatar" />
+        </el-form-item>
+
+        <el-form-item label="用户角色" prop="power">
+          <el-select v-model="form.power">
+            <el-option label="管理员" value="admin"></el-option>
+            <el-option label="用户" value="user"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="form.desc" />
+        </el-form-item>
+
+        <el-form-item>
+          <el-button @click="dialog = false">取 消</el-button>
+          <el-button type="primary" @click="addNewUser" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
   </el-container>
+  
 </template>
 
 
 <script>
-import { getAllUser } from '@/request/permission/'
+import { getAllUser, addNewUser } from '@/request/permission/'
 
 export default {
   data() {
     return {
+      dialog: false,
+      loading: false,
       userList: [],
       searchObj: {
         power: '',
         search: ''
-      }
+      },
+      form: {},
+      formRules: {
+        name: [{ required: true }],
+        avatar: [{ required: true }],
+        power: [{ required: true }]
+    },
     }
   },
   mounted() {
@@ -93,6 +138,40 @@ export default {
     },
     onSubmit() {
       this.getUserList(this.searchObj);
+    },
+    showDialog() {
+
+    },
+    async addNewUser() {
+      this.isloading = false;
+      const { isSuccess } = await addNewUser(this.form);
+      
+      if(isSuccess) {
+        this.isloading = false;
+        this.dialog = false;
+        this.getUserList();
+
+        this.$notify.success({
+          title: '成功',
+          message: '添加新用户成功～'
+        });
+      }
+    },
+    async removeUser() {
+      const { isSuccess } = await addNewUser(this.form);
+      
+      if(isSuccess) {
+        this.getUserList();
+
+        this.$notify.success({
+          title: '成功',
+          message: '删除成功～'
+        });
+      }
+    },
+    closeDrawer() {
+      console.log(this.form);
+      this.loading = true;
     },
     handleEdit(index, row) {
       console.log(index, row);

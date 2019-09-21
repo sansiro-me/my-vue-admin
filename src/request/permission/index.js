@@ -11,3 +11,7 @@ export function getUserInfo() {
 export function getAllUser(data) {
   return fetch.post('/permission/getAllUserList', { data: data });
 }
+
+export function addNewUser(data) {
+  return fetch.post('/permission/addNewUser', { data: data });
+}
