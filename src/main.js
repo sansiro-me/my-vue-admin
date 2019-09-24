@@ -7,8 +7,10 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/style/index.scss'
 
-import './plugins'
+import plugins from './plugins'
 import './router/check'
+
+Vue.use(plugins);
 
 Vue.config.productionTip = false
 

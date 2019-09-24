@@ -177,7 +177,24 @@ export default {
       console.log(index, row);
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
+
+      if(index < 1) {
+        this.$dialog('user/create-user-layer').then(data => {
+          console.log(data);
+        })
+      }
+      else {
+        this.$alert('这是一段内容', '标题名称', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: qqq`
+            });
+          }
+        });
+      }
     }
   }
 }

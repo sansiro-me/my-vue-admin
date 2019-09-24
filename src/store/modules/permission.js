@@ -59,7 +59,7 @@ export default {
     },
 
     setUserInfo(state, info) {
-      state.userid = info.userid;
+      state.userid = info.id;
       state.avatar = info.avatar;
       state.name = info.name;
     },
@@ -70,7 +70,7 @@ export default {
     },
     logout(state) {
       state.token = '';
-      localStorage.removeItem('token');　　
+      localStorage.removeItem('token');
     },
     setCrumbList(state, list) {
       state.crumbList = list
