@@ -15,7 +15,7 @@
 
         <el-form-item>
           <el-button type="primary" size="medium" @click="onSubmit">查询</el-button>
-          <el-button size="medium" @click="dialog = true">新增用户</el-button>
+          <el-button size="medium" @click="addNewUser">新增用户</el-button>
         </el-form-item>
       </el-form>
 
@@ -64,41 +64,6 @@
         </el-table-column>
       </el-table>
     </el-main>
-
-    <el-drawer
-      title="新增用户"
-      :visible.sync="dialog"
-      ref="drawer"
-      :wrapperClosable="false"
-      custom-class="medium"
-      :destroy-on-close="true"
-    >
-      <el-form :model="form" label-width="80px" :rules="formRules">
-        <el-form-item label="用户名称" prop="name">
-          <el-input type="text" v-model="form.name" maxlength="10" show-word-limit />
-        </el-form-item>
-
-        <el-form-item label="用户头像" prop="avatar">
-          <el-input v-model="form.avatar" />
-        </el-form-item>
-
-        <el-form-item label="用户角色" prop="power">
-          <el-select v-model="form.power">
-            <el-option label="管理员" value="admin"></el-option>
-            <el-option label="用户" value="user"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="备注">
-          <el-input type="textarea" v-model="form.desc" />
-        </el-form-item>
-
-        <el-form-item>
-          <el-button @click="dialog = false">取 消</el-button>
-          <el-button type="primary" @click="addNewUser" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
-        </el-form-item>
-      </el-form>
-    </el-drawer>
   </el-container>
   
 </template>
@@ -122,7 +87,7 @@ export default {
         name: [{ required: true }],
         avatar: [{ required: true }],
         power: [{ required: true }]
-    },
+      },
     }
   },
   mounted() {
@@ -143,18 +108,10 @@ export default {
 
     },
     async addNewUser() {
-      this.isloading = false;
-      const { isSuccess } = await addNewUser(this.form);
-      
-      if(isSuccess) {
-        this.isloading = false;
-        this.dialog = false;
-        this.getUserList();
+      const { button, data } = await this.$dialog('user/create-user-layer');
 
-        this.$notify.success({
-          title: '成功',
-          message: '添加新用户成功～'
-        });
+      if(button == 'ok' && data) {
+        this.getUserList();
       }
     },
     async removeUser() {
@@ -176,25 +133,17 @@ export default {
     handleEdit(index, row) {
       console.log(index, row);
     },
-    handleDelete(index, row) {
-      // console.log(index, row);
-
-      if(index < 1) {
-        this.$dialog('user/create-user-layer').then(data => {
-          console.log(data);
-        })
-      }
-      else {
-        this.$alert('这是一段内容', '标题名称', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: qqq`
-            });
-          }
-        });
-      }
+    async handleDelete(index, row) {
+      
+      this.$alert('这是一段内容', '标题名称', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'info',
+            message: `action: qqq`
+          });
+        }
+      });
     }
   }
 }
