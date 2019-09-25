@@ -61,15 +61,17 @@ export default {
     setUserInfo(state, info) {
       state.userid = info.id;
       state.avatar = info.avatar;
-      state.name = info.name;
+      state.name = info.nickname;
     },
     setLoginInfo(state, info) {
+      state.userid = info.id;
       state.token = info.token;
 
       localStorage.setItem('token', info.token);
     },
     logout(state) {
       state.token = '';
+      state.nickname = '';
       localStorage.removeItem('token');
     },
     setCrumbList(state, list) {

@@ -10,12 +10,9 @@ import './assets/style/index.scss'
 import plugins from './plugins'
 import './router/check'
 
-Vue.use(plugins);
-
 Vue.config.productionTip = false
 
-// console.log(router);
-
+Vue.use(plugins);
 Vue.use(ElementUI);
 
 new Vue({

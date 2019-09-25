@@ -4,6 +4,7 @@
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="角色">
           <el-select v-model="searchObj.power" size="medium">
+            <el-option label="全部" value=""></el-option>
             <el-option label="admin" value="admin"></el-option>
             <el-option label="user" value="user"></el-option>
           </el-select>
@@ -70,7 +71,7 @@
 
 
 <script>
-import { getAllUser, addNewUser } from '@/request/permission/'
+import { getAllUser, removeUser } from '@/request/permission/'
 
 export default {
   data() {
@@ -114,8 +115,10 @@ export default {
         this.getUserList();
       }
     },
-    async removeUser() {
-      const { isSuccess } = await addNewUser(this.form);
+    async removeUser(userid) {
+      const { isSuccess } = await removeUser({
+        userid: userid
+      });
       
       if(isSuccess) {
         this.getUserList();
@@ -134,16 +137,23 @@ export default {
       console.log(index, row);
     },
     async handleDelete(index, row) {
-      
-      this.$alert('这是一段内容', '标题名称', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'info',
-            message: `action: qqq`
-          });
-        }
+      const { button } = await this.$confirm("你确定的吗，少年？", "温馨提示");
+
+      if(button == 'ok') {
+        this.removeUser(row.id);
+      }
+      else {
+        console.log("not okd");
+      }
+    },
+    async handleEdit(index, row) {
+      const { button, data } = await this.$dialog('user/edit-user-layer', {
+        data: row
       });
+
+      if(button == 'ok' && data) {
+        this.getUserList();
+      }
     }
   }
 }

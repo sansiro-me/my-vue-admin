@@ -15,3 +15,11 @@ export function getAllUser(data) {
 export function addNewUser(data) {
   return fetch.post('/permission/addNewUser', { data: data });
 }
+
+export function removeUser(data) {
+  return fetch.get('/permission/removeUser', { data: data });
+}
+
+export function editUserInfo(data) {
+  return fetch.post('/permission/editUser', { data: data });
+}

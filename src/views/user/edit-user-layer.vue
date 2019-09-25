@@ -2,7 +2,7 @@
 	<div>
 		<el-form :model="form" label-width="80px" :rules="formRules">
 			<el-form-item label="用户名称" prop="name">
-				<el-input type="text" v-model="form.name" maxlength="10" show-word-limit />
+				<el-input type="text" v-model="form.nickname" disabled/>
 			</el-form-item>
 
 			<el-form-item label="用户头像" prop="avatar">
@@ -16,64 +16,54 @@
 				</el-select>
 			</el-form-item>
 
-      <el-form-item label="登陆密码" prop="passwd">
-				<el-input type="text" v-model="form.passwd" show-password maxlength="20" show-word-limit />
-			</el-form-item>
-
-      <el-form-item label="确认密码" prop="repasswd">
-				<el-input type="text" v-model="form.repasswd" show-password maxlength="20" show-word-limit />
-			</el-form-item>
-
 			<el-form-item label="备注">
-				<el-input type="textarea" v-model="form.desc" />
+				<el-input type="textarea" v-model="form.description" />
 			</el-form-item>
 		</el-form>
 	</div>
 </template> 
 
 <script>
-import { addNewUser } from '@/request/permission/'
+import { editUserInfo } from '@/request/permission/'
 
 export default {
 	data() {
 		return {
 			dialogOptions: {
-				title: '新增用户'
+				title: '修改用户信息'
 			},
 			form: {},
       formRules: {
-        name: [{ required: true }],
+        nickname: [{ required: true }],
         avatar: [{ required: true }],
-        power: [{ required: true }],
-        passwd: [{ required: true }],
-        repasswd: [{ required: true }]
+        power: [{ required: true }]
 			},
 			loading: false
 		}
 	},
 
 	mounted() {
-
+    this.form = this.dialogOptions.data;
 	},
 
 	methods: {
 		async dialogClickButton(button) {
 			if(button == 'ok' || button == 'yes') {
-				const result = await this.addNewUser();
+				const result = await this.editUserInfo();
 
 				return result;
 			}
 		},
-		async addNewUser() {
+		async editUserInfo() {
       this.isloading = false;
-      const { isSuccess } = await addNewUser(this.form);
+      const { isSuccess } = await editUserInfo(this.form);
       
       if(isSuccess) {
         this.isloading = false;
 
         this.$notify.success({
           title: '成功',
-          message: '添加新用户成功～'
+          message: '修改用户信息成功～'
 				});
 				
 				return true;
