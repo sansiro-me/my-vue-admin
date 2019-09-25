@@ -2,9 +2,9 @@
   <div class="login-container">
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <h3 class="title">后台管理系统</h3>
-      <el-form-item prop="username">
+      <el-form-item prop="account">
         <span class="svg-container icon-user"></span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="account" type="text" v-model="loginForm.account" autoComplete="on" placeholder="account" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container icon-lock"></span>
@@ -41,11 +41,11 @@ export default {
         }
         return {
             loginForm: {
-                username: 'admin',
+                account: 'admin',
                 password: '123456'
             },
             loginRules: {
-                username: [
+                account: [
                     {
                         required: true,
                         trigger: 'blur',

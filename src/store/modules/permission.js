@@ -14,12 +14,12 @@ export default {
     // currentMenu: '' /** 当前active导航菜单 */,
     control_list: [] /** 完整的权限列表 */,
     // avatar: ''/** 头像 */,
-    account: ''/** 用户角色 */,
 
+    account: '',
     avatar: '',
     userid: '',
     token: '',
-    name: '',
+    nickname: '',
     get getToken() {
       return localStorage.getItem('token')
     },
@@ -61,11 +61,15 @@ export default {
     setUserInfo(state, info) {
       state.userid = info.id;
       state.avatar = info.avatar;
-      state.name = info.nickname;
+      state.nickname = info.nickname;
+      state.account = info.account;
     },
     setLoginInfo(state, info) {
       state.userid = info.id;
       state.token = info.token;
+      state.avatar = info.avatar;
+      state.nickname = info.nickname;
+      state.account = info.account;
 
       localStorage.setItem('token', info.token);
     },

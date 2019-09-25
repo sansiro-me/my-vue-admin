@@ -11,7 +11,7 @@
         </el-form-item>
 
         <el-form-item label="搜索内容">
-          <el-input v-model="searchObj.search" size="medium"></el-input>
+          <el-input v-model="searchObj.search" size="medium" clearable></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -21,13 +21,19 @@
       </el-form>
 
       <el-table :data="userList" style="width: 100%">
-        <el-table-column label="用户id" min-width="100">
+        <el-table-column label="序号">
           <template slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
+            <span>{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="昵称">
+        <el-table-column label="账号" min-width="100">
+          <template slot-scope="scope">
+            <span>{{ scope.row.account }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="昵称" min-width="170">
           <template slot-scope="scope">
             <span>{{ scope.row.nickname }}</span>
           </template>
@@ -64,6 +70,15 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :page-count="pager.total"
+        hide-on-single-page
+        class="el-page-style"
+        @current-change="changePage">
+      </el-pagination>
     </el-main>
   </el-container>
   
@@ -83,36 +98,58 @@ export default {
         power: '',
         search: ''
       },
-      form: {},
-      formRules: {
-        name: [{ required: true }],
-        avatar: [{ required: true }],
-        power: [{ required: true }]
-      },
+      // totalSize: 1
+      pager: {
+        total: 0,
+        current: 0
+      }
     }
   },
   mounted() {
     this.getUserList();
   },
   methods: {
-    async getUserList(search = {}) {
-      const { isSuccess, data } = await getAllUser(search);
-
-      if(isSuccess) {
-        this.userList = data;
-      }
+    changePage(pageNum) {
+      this.getUserList(this.searchObj, pageNum);
     },
     onSubmit() {
       this.getUserList(this.searchObj);
     },
-    showDialog() {
+    async getUserList(search = {}, page = 1) {
+      if(search.search) {
+        search.search = this.trim(search.search);
+      }
 
+      const { isSuccess, data } = await getAllUser({
+        search: search.search,
+        power: search.power,
+        page: page
+      });
+
+      if(isSuccess) {
+        this.userList = data.list;
+        this.pager = {
+          total: data.total,
+          current: page
+        }
+      }
     },
     async addNewUser() {
       const { button, data } = await this.$dialog('user/create-user-layer');
 
       if(button == 'ok' && data) {
         this.getUserList();
+      }
+    },
+    async handleDelete(index, row) {
+      const { button } = await this.$confirm("你确定的吗，少年？", "温馨提示");
+
+console.log(button);
+      if(button == 'ok') {
+        this.removeUser(row.id);
+      }
+      else {
+        console.log("not okd");
       }
     },
     async removeUser(userid) {
@@ -129,32 +166,24 @@ export default {
         });
       }
     },
-    closeDrawer() {
-      console.log(this.form);
-      this.loading = true;
-    },
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
-    async handleDelete(index, row) {
-      const { button } = await this.$confirm("你确定的吗，少年？", "温馨提示");
-
-      if(button == 'ok') {
-        this.removeUser(row.id);
-      }
-      else {
-        console.log("not okd");
-      }
-    },
     async handleEdit(index, row) {
       const { button, data } = await this.$dialog('user/edit-user-layer', {
-        data: row
+        data: JSON.parse(JSON.stringify(row))
       });
 
       if(button == 'ok' && data) {
         this.getUserList();
       }
+    },
+    trim(str) {
+      return str.replace(/^\s+|\s+$/, '');
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.el-page-style {
+  margin-top: 15px;
+}
+</style>

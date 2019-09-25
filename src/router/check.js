@@ -6,7 +6,7 @@ router.beforeEach((to, from, next) => {
     next();
   }
   else if(store.state.permission.getToken) {
-    if(!store.state.permission.name) {
+    if(!store.state.permission.account) {
       store.dispatch('permission/getInfo').then(() => {
         next();
       })

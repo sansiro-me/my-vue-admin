@@ -1,8 +1,12 @@
 <template>
 	<div>
 		<el-form :model="form" label-width="80px" :rules="formRules">
-			<el-form-item label="用户名称" prop="name">
-				<el-input type="text" v-model="form.name" maxlength="10" show-word-limit />
+			<el-form-item label="账号" prop="account">
+				<el-input type="text" v-model="form.account" maxlength="20" show-word-limit />
+			</el-form-item>
+
+			<el-form-item label="用户昵称" prop="nickname">
+				<el-input type="text" v-model="form.nickname" maxlength="10" show-word-limit />
 			</el-form-item>
 
 			<el-form-item label="用户头像" prop="avatar">
@@ -42,7 +46,8 @@ export default {
 			},
 			form: {},
       formRules: {
-        name: [{ required: true }],
+				account: [{ required: true }],
+        nickname: [{ required: true }],
         avatar: [{ required: true }],
         power: [{ required: true }],
         passwd: [{ required: true }],

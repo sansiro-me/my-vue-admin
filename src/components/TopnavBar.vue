@@ -4,21 +4,17 @@
     </span>
 
     <el-breadcrumb separator="/" class="el-breadcrumb">
-      <!-- <transition-group name="breadcrumb"> -->
-        <template v-for="(todo, index) in crumbList">
-          <el-breadcrumb-item :key="index" v-if="todo.name != 'container'"> {{todo.meta.name}} </el-breadcrumb-item>
-        </template>
-        <!-- <el-breadcrumb-item>人才</el-breadcrumb-item>
-        <el-breadcrumb-item>管理</el-breadcrumb-item> -->
-      <!-- </transition-group> -->
+      <template v-for="(todo, index) in crumbList">
+        <el-breadcrumb-item :key="index" v-if="todo.name != 'container'"> {{todo.meta.name}} </el-breadcrumb-item>
+      </template>
     </el-breadcrumb>
 
     <div class="aside-top-right">
       <div class="user-msg">
         <el-dropdown trigger="click" placement="top" @command="handleCommand">
           <span class="el-dropdown-link">
-            <img class="user-img" :src="avatar" alt="">
-            <span class="user-name">{{ name }}</span>
+            <el-avatar class="user-img" :src="avatar"></el-avatar>
+            <span class="user-name">{{ nickname }}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -47,7 +43,7 @@ export default {
   },
   computed: {
     ...mapState(['isSidebarNavCollapse']),
-    ...mapState('permission', ['avatar', 'name', 'crumbList'])
+    ...mapState('permission', ['avatar', 'nickname', 'crumbList'])
   },
   methods: {
     toggleNavCollapse() {
@@ -194,5 +190,6 @@ export default {
   display: inline-block;
   height: 100%;
   user-select: none;
+  vertical-align: middle;
 }
 </style>
