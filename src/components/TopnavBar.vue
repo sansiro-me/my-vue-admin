@@ -21,9 +21,9 @@
             <el-dropdown-item command="user">
               <span class="icon-user"> 个人中心</span>
             </el-dropdown-item>
-            <el-dropdown-item command="passwd">
+            <!-- <el-dropdown-item command="passwd">
               <span class="icon-lock"> 修改密码</span>
-            </el-dropdown-item>
+            </el-dropdown-item> -->
             <el-dropdown-item command="exit">
               <span class="icon-power"> 退出登陆</span>
             </el-dropdown-item>
@@ -52,6 +52,7 @@ export default {
     handleCommand(str) {
       switch(str) {
         case 'user':
+          this.$router.push({ path: '/user/center' });
           break;
         case 'passwd':
           break;
@@ -102,6 +103,8 @@ export default {
   }
 
   .aside-top-right {
+    margin-right: 10px;
+    
     > div {
       position: relative;
       display: inline-block;
@@ -153,6 +156,7 @@ export default {
         .user-name {
           color: #272f3c;
           padding: 0 4px;
+          margin-left: 5px;
         }
       }
     }

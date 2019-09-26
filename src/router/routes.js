@@ -22,7 +22,7 @@ const routes = [
       {
         path: 'manage',
         name: 'user-manage',
-        component:() => import('@/views/user/manage'),
+        component:() => import('@/views/user/manage/manage'),
         meta: {
           name: '用户列表',
           icon: 'eye'
@@ -31,7 +31,7 @@ const routes = [
       {
         path: 'center',
         name: 'user-center',
-        component:() => import('@/views/user/center'),
+        component:() => import('@/views/user/center/center'),
         meta: {
           name: '个人中心',
           icon: 'user'
@@ -44,17 +44,17 @@ const routes = [
     name: 'works',
     component: layout,
     meta: {
-      name: '管理',
-      icon: 'anchor'
+      name: '网站管理',
+      icon: 'tv'
     },
     children: [
       {
         path: 'manage',
-        name: 'manage',
-        component:() => import('@/views/works/manage'),
+        name: 'works-manage',
+        component:() => import('@/views/works/my-works/manage'),
         meta: {
-          name: '管理作品',
-          icon: 'eye'
+          name: '我的作品',
+          icon: 'archive'
         }
       },
       {
@@ -63,7 +63,7 @@ const routes = [
         component:() => import('@/views/works/site'),
         meta: {
           name: '管理网站',
-          icon: 'user'
+          icon: 'aperture'
         }
       }
     ]

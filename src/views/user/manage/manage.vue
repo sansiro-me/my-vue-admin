@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container v-loading="loading">
     <el-main>
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="角色">
@@ -81,7 +81,6 @@
       </el-pagination>
     </el-main>
   </el-container>
-  
 </template>
 
 
@@ -91,14 +90,12 @@ import { getAllUser, removeUser } from '@/request/permission/'
 export default {
   data() {
     return {
-      dialog: false,
       loading: false,
       userList: [],
       searchObj: {
         power: '',
         search: ''
       },
-      // totalSize: 1
       pager: {
         total: 0,
         current: 0
@@ -116,6 +113,8 @@ export default {
       this.getUserList(this.searchObj);
     },
     async getUserList(search = {}, page = 1) {
+      this.loading = true;
+
       if(search.search) {
         search.search = this.trim(search.search);
       }
@@ -133,9 +132,11 @@ export default {
           current: page
         }
       }
+
+      this.loading = false;
     },
     async addNewUser() {
-      const { button, data } = await this.$dialog('user/create-user-layer');
+      const { button, data } = await this.$dialog('user/manage/create-user-layer');
 
       if(button == 'ok' && data) {
         this.getUserList();
@@ -144,7 +145,6 @@ export default {
     async handleDelete(index, row) {
       const { button } = await this.$confirm("你确定的吗，少年？", "温馨提示");
 
-console.log(button);
       if(button == 'ok') {
         this.removeUser(row.id);
       }
@@ -167,7 +167,7 @@ console.log(button);
       }
     },
     async handleEdit(index, row) {
-      const { button, data } = await this.$dialog('user/edit-user-layer', {
+      const { button, data } = await this.$dialog('user/manage/edit-user-layer', {
         data: JSON.parse(JSON.stringify(row))
       });
 
