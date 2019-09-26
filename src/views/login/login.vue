@@ -4,17 +4,16 @@
       <h3 class="title">后台管理系统</h3>
       <el-form-item prop="account">
         <span class="svg-container icon-user"></span>
-        <el-input name="account" type="text" v-model="loginForm.account" autoComplete="on" placeholder="account" />
+        <el-input name="account" type="text" v-model="loginForm.account" autoComplete="on" placeholder="登陆账号" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container icon-lock"></span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="login" v-model="loginForm.password" autoComplete="on" placeholder="password"></el-input>
+        <el-input name="password" :type="pwdType" @keyup.enter.native="login" v-model="loginForm.password" autoComplete="on" placeholder="密码"></el-input>
         <span class="show-pwd icon-eye" @click="showPwd"></span>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="login">Sign in</el-button>
       </el-form-item>
-      <div class="tips">用户为admin的时候，能够看到所有的权限列表，其余账号只能看到部分</div>
     </el-form>
   </div>
 </template>
@@ -41,8 +40,8 @@ export default {
         }
         return {
             loginForm: {
-                account: 'admin',
-                password: '123456'
+                account: '',
+                password: ''
             },
             loginRules: {
                 account: [
