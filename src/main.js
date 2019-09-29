@@ -8,11 +8,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/style/index.scss'
 
 import plugins from './plugins'
-import './router/check'
+import components from './components/common'
 
 Vue.config.productionTip = false
 
 Vue.use(plugins);
+Vue.use(components);
 Vue.use(ElementUI);
 
 new Vue({

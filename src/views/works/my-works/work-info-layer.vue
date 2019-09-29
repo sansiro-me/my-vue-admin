@@ -10,7 +10,8 @@
 			</el-form-item>
 
 			<el-form-item label="海报图" prop="poster">
-				<el-input v-model="form.poster" />
+				<!-- <el-input v-model="form.poster" /> -->
+        <upload-img v-model="form.poster" preview tips="支持png、jpg、jpeg格式，最大限制100kb">上传封面图</upload-img>
 			</el-form-item>
 
 			<el-form-item label="简介" prop="abstract">
@@ -68,7 +69,7 @@ export default {
       if(isSuccess) {
         this.$notify.success({
           title: '成功',
-          message: '修改用户信息成功～'
+          message: '修改作品信息成功～'
 				});
 				
 				return true;

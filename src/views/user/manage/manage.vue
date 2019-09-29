@@ -59,7 +59,7 @@
 
         <el-table-column label="备注" min-width="300">
           <template slot-scope="scope">
-            <span>{{ scope.row.description }}</span>
+            <span class="pre">{{ scope.row.description }}</span>
           </template>
         </el-table-column>
 
@@ -185,5 +185,9 @@ export default {
 <style lang="scss" scoped>
 .el-page-style {
   margin-top: 15px;
+}
+
+.pre {
+  white-space: pre-wrap;
 }
 </style>

@@ -10,7 +10,7 @@
 			</el-form-item>
 
 			<el-form-item label="用户头像" prop="avatar">
-				<el-input v-model="form.avatar" />
+        <upload-img v-model="form.avatar" preview type="avatar" tips="支持png、jpg、jpeg格式，最大限制50kb">上传新头像</upload-img>
 			</el-form-item>
 
 			<el-form-item label="用户角色" prop="power">

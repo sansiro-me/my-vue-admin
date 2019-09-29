@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-import router from '@/router/'
 import store from '@/store'
 
-const http = new Object();
+const http = {};
 
 const baseURL = '/blog_api';
 
@@ -37,10 +36,13 @@ const queryStringify = (obj, prefix) => {
   return pairs.join('&');
 };
 
-
-var instance = axios.create({
-  timeout: 5000,
+// 创建实例
+const instance = axios.create({
+  timeout: 30000,
   baseURL,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest'
+  },
   transformRequest: [function(data, headers) {
     if(data instanceof FormData) {
       return data;
@@ -91,19 +93,15 @@ var instance = axios.create({
 
 // 添加请求拦截器
 instance.interceptors.request.use(config => {
-    // 请求头添加token
-    // if (store.state.UserToken) {
-    //   config.headers.Authorization = `Bearer ${store.state.UserToken}`
-    // }
-    if (config.method === 'get') {
-      config.params = config.data;
-    }
-  
-    return config
-  }, error => {
-    return Promise.reject(error)
+  if (config.method === 'get') {
+    config.params = config.data;
   }
-)
+
+  return config
+}, error => {
+  // 错误处理
+  return Promise.reject(error)
+})
 
 // 响应拦截器即异常处理
 instance.interceptors.response.use(
@@ -181,7 +179,7 @@ http.post = function(url, options) {
   }
   return new Promise((resolve, reject) => {
     instance
-      .post(url, options.data ? options.data : '', options)
+      .post(url, options.data ? options.data : '')
       .then(response => {
         if (!options || options.isShowLoading !== false) {
           // loading = document.getElementById('ajaxLoading')
@@ -215,4 +213,45 @@ http.post = function(url, options) {
   })
 }
 
-export default http
+// export default http
+
+
+export default function(url, options = {}) {
+  if (options.upload === true) {
+    const fd = new FormData();
+
+    for (const key in options.data) {
+      fd.append(key, options.data[key]);
+    }
+
+    options.data = fd;
+  }
+
+  return instance(url, options)
+    .then(response => {
+      if (response.code === 0) {
+        return {
+          isSuccess: true,
+          data: response.data,
+          msg: response.msg
+        };
+      }
+      else {
+        Message.error({
+          message: response.msg
+        })
+        
+        return {
+          isSuccess: false,
+          data: response.data,
+          msg: response.msg
+        };
+      }
+    }).catch(msg => {
+      console.log(msg)
+
+      Message.error({
+        message: msg
+      })
+    })
+}

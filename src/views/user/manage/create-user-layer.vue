@@ -10,7 +10,7 @@
 			</el-form-item>
 
 			<el-form-item label="用户头像" prop="avatar">
-				<el-input v-model="form.avatar" />
+        <upload-img v-model="form.avatar" preview type="avatar" tips="支持png、jpg、jpeg格式，最大限制50kb">点击上传头像</upload-img>
 			</el-form-item>
 
 			<el-form-item label="用户角色" prop="power">
@@ -71,6 +71,7 @@ export default {
 		},
 		async addNewUser() {
       this.isloading = false;
+
       const { isSuccess } = await addNewUser(this.form);
       
       if(isSuccess) {
@@ -87,6 +88,15 @@ export default {
 				return false;
 			}
     },
+    uploadAvatar() {
+      console.log(arguments)
+    }
 	}
 }
 </script>
+
+<style lang="scss" scoped>
+.normal-lineh {
+  line-height: 30px;
+}
+</style>
