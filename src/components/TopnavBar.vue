@@ -52,7 +52,7 @@ export default {
     handleCommand(str) {
       switch(str) {
         case 'user':
-          this.$router.push({ path: '/user/center' });
+          this.$router.push({ path: '/user-center' });
           break;
         case 'passwd':
           break;

@@ -2,15 +2,6 @@ import layout from '@/components/LayOut'
 
 const routes = [
   {
-    path: 'home',
-    name: 'home',
-    component:() => import('@/views/home/home'),
-    meta: {
-      name: '首页',
-      icon: 'home'
-    }
-  },
-  {
     path: 'user',
     name: 'user',
     component: layout,
@@ -26,15 +17,6 @@ const routes = [
         meta: {
           name: '用户列表',
           icon: 'eye'
-        }
-      },
-      {
-        path: 'center',
-        name: 'user-center',
-        component:() => import('@/views/user/center/center'),
-        meta: {
-          name: '个人中心',
-          icon: 'user'
         }
       }
     ]
@@ -67,7 +49,58 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: 'auth',
+    name: 'auth',
+    component: layout,
+    meta: {
+      name: '权限控制',
+      icon: 'toggle-left'
+    },
+    children: [
+      {
+        path: 'manage',
+        name: 'auth-manage',
+        component:() => import('@/views/auth/group/group-manage'),
+        meta: {
+          name: '角色管理',
+          icon: 'users'
+        }
+      },
+      {
+        path: 'route',
+        name: 'roure-manage',
+        component:() => import('@/views/auth/router/router-manage'),
+        meta: {
+          name: '路由管理',
+          icon: 'map',
+        }
+      }
+    ]
   }
 ];
 
-export default routes;
+const baseRoutes = [
+  {
+    path: 'home',
+    name: 'home',
+    component:() => import('@/views/home/home'),
+    meta: {
+      name: '首页',
+      icon: 'home'
+    }
+  },
+  {
+    path: 'user-center',
+    name: 'user-center',
+    component:() => import('@/views/user/center/center'),
+    meta: {
+      name: '个人中心',
+      hidden: true
+    }
+  },
+  ...routes
+];
+
+export default baseRoutes;

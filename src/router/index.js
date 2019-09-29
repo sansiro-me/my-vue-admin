@@ -19,19 +19,13 @@ const router = new Router({
       name: 'container',
       component:() => import('@/components/Container.vue'),
       redirect: 'home',
-      meta: {
-        name: '首页'
-      },
       children: menus
+    },
+    {
+      path: '*',
+      name: 'not-found',
+      component: () => import('@/components/404.vue')
     }
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
-    // }
   ]
 });
 
@@ -60,4 +54,4 @@ router.afterEach((to) => {
 });
 
 
-export default router;
+export default router
