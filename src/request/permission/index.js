@@ -39,3 +39,7 @@ export function getOwnInfo() {
 export function changePasswd(data) {
   return fetch('/permission/changePasswd', { method: 'post', data: data });
 }
+
+export function getRouteList() {
+  return fetch('/permission/getRouteList');
+}

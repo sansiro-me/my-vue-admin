@@ -41,7 +41,7 @@ const routes = [
       },
       {
         path: 'site',
-        name: 'site',
+        name: 'site-manage',
         component:() => import('@/views/works/site'),
         meta: {
           name: '管理网站',

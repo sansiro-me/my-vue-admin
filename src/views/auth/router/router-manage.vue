@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getOwnInfo } from "@/request/permission"
+import { getRouteList } from "@/request/permission"
 
 export default {
   data() {
@@ -27,65 +27,68 @@ export default {
       routeList: [],
       defaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'title'
       }
     }
   },
 
   mounted() {
     this.getRouteList();
+
+    this.routeList = [
+      {
+        title: '用户管理',
+        children: [
+          {
+            title: '用户列表',
+            name: 'user-manage',
+            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
+          }
+        ]
+      },
+      {
+        title: '网站管理',
+        children: [
+          {
+            title: '我的作品',
+            name: 'works-manage',
+            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
+          },
+          {
+            title: '管理网站',
+            name: 'site-manage',
+            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
+          }
+        ]
+      },
+      {
+        title: '权限控制',
+        children: [
+          {
+            title: '角色管理',
+            name: 'auth-manage',
+            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
+          },
+          {
+            title: '路由管理',
+            name: 'roure-manage',
+            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
+          }
+        ]
+      }
+    ];
   },
 
   methods: {
     showCurrent() {
       console.log(this.$refs.tree.getCheckedNodes());
     },
-    getRouteList() {
-      this.routeList = [
-        {
-          id: 1,
-          name: '用户管理',
-          children: [
-            {
-              id: 2,
-              name: '用户列表',
-              children: [{ id: 3, name: 'read' }, { id: 4, name: 'write' }]
-            }
-          ]
-        },
-        {
-          id: 5,
-          name: '网站管理',
-          children: [
-            {
-              id: 6,
-              name: '我的作品',
-              children: [{ id: 7, name: 'read' }, { id: 8, name: 'write' }]
-            },
-            {
-              id: 9,
-              name: '管理网站',
-              children: [{ id: 10, name: 'read' }, { id: 11, name: 'write' }]
-            }
-          ]
-        },
-        {
-          id: 12,
-          name: '权限控制',
-          children: [
-            {
-              id: 13,
-              name: '角色管理',
-              children: [{ id: 4, name: 'read' }, { id: 15, name: 'write' }]
-            },
-            {
-              id: 16,
-              name: '路由管理',
-              children: [{ id: 17, name: 'read' }, { id: 18, name: 'write' }]
-            }
-          ]
-        }
-      ]
+    async getRouteList() {
+      const { isSuccess, data } = await getRouteList();
+
+      if(isSuccess) {
+        console.log(data);
+      }
     }
   }
 }
