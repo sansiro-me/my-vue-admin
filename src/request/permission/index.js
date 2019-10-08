@@ -40,6 +40,16 @@ export function changePasswd(data) {
   return fetch('/permission/changePasswd', { method: 'post', data: data });
 }
 
+// 获取路由表
 export function getRouteList() {
   return fetch('/permission/getRouteList');
+}
+
+// 获取角色列表
+export function getGroupList(data) {
+  return fetch('/permission/getGroupList', { method: 'post', data: data });
+}
+
+export function getGroupRoute() {
+  return fetch('/permission/getGroupRoute');
 }

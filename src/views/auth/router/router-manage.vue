@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getRouteList } from "@/request/permission"
+import { getRouteList, getGroupRoute } from "@/request/permission"
 
 export default {
   data() {
@@ -28,66 +28,108 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'title'
-      }
+      },
+      nowRoute: [],
+      nowKey: [],
+      showKey: [],
+      baseNum: 1
     }
   },
 
   mounted() {
-    this.getRouteList();
-
-    this.routeList = [
-      {
-        title: '用户管理',
-        children: [
-          {
-            title: '用户列表',
-            name: 'user-manage',
-            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
-          }
-        ]
-      },
-      {
-        title: '网站管理',
-        children: [
-          {
-            title: '我的作品',
-            name: 'works-manage',
-            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
-          },
-          {
-            title: '管理网站',
-            name: 'site-manage',
-            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
-          }
-        ]
-      },
-      {
-        title: '权限控制',
-        children: [
-          {
-            title: '角色管理',
-            name: 'auth-manage',
-            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
-          },
-          {
-            title: '路由管理',
-            name: 'roure-manage',
-            children: [{ title: '只读', name: 'read' }, { title: '读写', name: 'write' }]
-          }
-        ]
-      }
-    ];
+    this.getPageInfo();
   },
 
   methods: {
+    async getPageInfo() {
+      await this.getRouteList();
+      await this.getNowRoute();
+
+      // console.log('okokoko');
+      this.addNumToNode(this.routeList);
+
+      console.log(this.routeList);
+      console.log(this.showKey);
+
+      // setCheckedKeys
+      let rere = this.$refs.tree.setCheckedKeys([1]);
+      console.log(rere)
+    },
+    addNumToNode(node) {
+      if(node instanceof Array) {
+        for(let i = 0; i < node.length; i++) {
+          this.addNumToNode(node[i]);
+        }
+      }
+      else if(node instanceof Object) {
+        node.id = this.baseNum;
+        this.baseNum++;
+
+        if (node.name && this.nowKey.includes(node.name)) {
+          this.showKey.push(node.id);
+        }
+
+        if (node.parent && this.nowKey.includes(node.parent) && this.nowRoute[node.parent][node.name]) {
+          this.showKey.push(node.id);
+        }
+
+        if(node.children && node.children.length > 0) {
+          this.addNumToNode(node.children);
+        }
+      }
+    },
     showCurrent() {
-      console.log(this.$refs.tree.getCheckedNodes());
+      // console.log(this.$refs.tree.getCheckedNodes(true));
+      let nowTree = this.$refs.tree.getCheckedNodes(true);
+      let res = {};
+
+      for(let i = 0; i < nowTree.length; i++) {
+        if(res[nowTree[i].parent]) {
+          res[nowTree[i].parent][nowTree[i].name] = true;
+        }
+        else {
+          res[nowTree[i].parent] = {};
+          res[nowTree[i].parent][nowTree[i].name] = true;
+        }
+      }
+
+      console.log(res);
     },
     async getRouteList() {
       const { isSuccess, data } = await getRouteList();
 
       if(isSuccess) {
-        console.log(data);
+        // console.log(data);
+        this.routeList = this.calcRouteTree(data);
+      }
+    },
+    calcRouteTree(data) {
+      for (let i = 0; i < data.length; i++) {
+        if(data[i].children && data[i].children.length > 0) {
+          for (let j = 0; j < data[i].children.length; j++) {
+            if(data[i].children[j].children && data[i].children[j].children.length) {
+              for (let k = 0; k < data[i].children[j].children.length; k++) {
+                data[i].children[j].children[k].parent = data[i].children[j].name;
+              }
+            }
+            else {
+              data[i].children[j].parent = data[i].name;
+            }
+          }
+        }
+        else {
+          
+        }
+      }
+
+      return data;
+    },
+    async getNowRoute() {
+      const { isSuccess, data } = await getGroupRoute();
+
+      if(isSuccess) {
+        this.nowRoute = data;
+        this.nowKey = Object.keys(data);
       }
     }
   }
