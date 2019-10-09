@@ -5,6 +5,10 @@ import store from '@/store'
 import Login from '@/views/login/login.vue'
 import menus from './routes'
 
+const menus2 = store.getters.getMenu;
+
+console.log(menus2);
+
 Vue.use(Router)
 
 const router = new Router({
@@ -53,5 +57,7 @@ router.afterEach((to) => {
   store.commit('permission/setCurrentMenu', to.name)
 });
 
-
 export default router
+
+// export Object router;
+// export list;

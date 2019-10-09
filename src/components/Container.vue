@@ -17,20 +17,13 @@ import TopnavBar from '@/components/TopnavBar';
 import SideMenu from '@/components/SideMenu';
 
 import { mapState } from 'vuex'
-import menus from '@/router/routes'
 
 export default {
-  data() {
-    return {
-      menuList: menus
-    }
-  },
-
   components: { TopnavBar, SideMenu },
 
   computed: {
     ...mapState(['isSidebarNavCollapse']),
-    ...mapState('permission', ['currentMenu'])
+    ...mapState('permission', ['currentMenu', 'menuList'])
   },
 
   methods: {

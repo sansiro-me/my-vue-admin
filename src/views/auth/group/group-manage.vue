@@ -49,9 +49,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" width="220">
           <template slot-scope="scope">
             <el-button size="mini">编辑</el-button>
+            <el-button size="mini" type="warning" @click="gotoManage(scope.row.id)">管理</el-button>
             <el-button size="mini" type="danger">删除</el-button>
           </template>
         </el-table-column>
@@ -91,6 +92,17 @@ export default {
   },
 
   methods: {
+    async gotoManage(id) {
+      const { button, data } = await this.$dialog('auth/group/group-route-layer', {
+        data: {
+          id: id
+        }
+      });
+
+      if(button == 'ok' && data) {
+        // this.getUserList();
+      }
+    },
     changePage(pageNum) {
       this.getAuthList(this.search, pageNum);
     },

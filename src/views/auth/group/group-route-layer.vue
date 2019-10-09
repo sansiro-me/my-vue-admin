@@ -1,30 +1,34 @@
 <template>
-  <el-container>
-    <el-main>
-      <el-tree
-        :data="data"
-        show-checkbox
-        default-expand-all
-        node-key="id"
-        ref="tree"
-        highlight-current
-        :indent="50"
-        :props="defaultProps">
-      </el-tree>
+	<div>
+    <el-tree
+      :data="data"
+      show-checkbox
+      default-expand-all
+      node-key="id"
+      ref="tree"
+      highlight-current
+      :indent="50"
+      :props="defaultProps">
+    </el-tree>
 
-      <el-button @click="showCurrent">calc</el-button>
-      <el-button @click="setShow">show</el-button>
-      <el-button @click="clear">clear</el-button>
-    </el-main>
-  </el-container>
+    <div class="margin-top">
+      <el-button size="mini" @click="reset">复原</el-button>
+      <el-button size="mini" @click="clear">清空</el-button>
+    </div>
+	</div>
 </template>
 
 <script>
-import { getRouteList, getGroupRoute } from "@/request/permission"
+import { setGroupRoute, getGroupRoute } from "@/request/permission"
 
 export default {
   data() {
     return {
+      dialogOptions: {
+				title: '修改角色路由'
+			},
+      id: '',
+      loading: false,
       form: {},
       routeList: [],
       data: [],
@@ -40,19 +44,39 @@ export default {
   },
 
   mounted() {
+    this.id = this.dialogOptions.data.id;
+
     this.getPageInfo();
   },
 
   methods: {
+    async dialogClickButton(button) {
+			if(button == 'ok' || button == 'yes') {
+				const result = await this.setNewRoute();
+
+				return result;
+			}
+		},
     clear() {
       this.$refs.tree.setCheckedKeys([]);
     },
-    setShow() {
+    reset() {
       this.$refs.tree.setCheckedKeys(this.showKey, true);
-      // console.log(this.$refs.tree.getCheckedNodes(true))
+    },
+    async getNowRoute() {
+      const { isSuccess, data } = await getGroupRoute({
+        id: this.id
+      });
+
+      if(isSuccess) {
+        this.nowRoute = data.now;
+        this.nowKey = Object.keys(data.now);
+
+        this.routeList = this.calcRouteTree(data.route);
+      }
     },
     async getPageInfo() {
-      await this.getRouteList();
+      this.loading = true;
       await this.getNowRoute();
 
       this.addNumToNode(this.routeList);
@@ -60,6 +84,7 @@ export default {
       this.data = this.routeList;
 
       this.$refs.tree.setCheckedKeys(this.showKey, true);
+      this.loading = false;
     },
     addNumToNode(node) {
       if(node instanceof Array) {
@@ -84,8 +109,7 @@ export default {
         }
       }
     },
-    showCurrent() {
-      // console.log(this.$refs.tree.getCheckedNodes(true));
+    async setNewRoute() {
       let nowTree = this.$refs.tree.getCheckedNodes(true);
       let res = {};
 
@@ -99,15 +123,19 @@ export default {
         }
       }
 
-      console.log(res);
-    },
-    async getRouteList() {
-      const { isSuccess, data } = await getRouteList();
+      const { isSuccess, data } = await setGroupRoute({
+        new: res,
+        id: this.id
+      });
 
-      if(isSuccess) {
-        // console.log(data);
-        this.routeList = this.calcRouteTree(data);
+      if (isSuccess) {
+        this.$notify.success({
+          title: '成功',
+          message: '修改成功～'
+				});
       }
+
+      return isSuccess
     },
     calcRouteTree(data) {
       for (let i = 0; i < data.length; i++) {
@@ -129,19 +157,18 @@ export default {
       }
 
       return data;
-    },
-    async getNowRoute() {
-      const { isSuccess, data } = await getGroupRoute();
-
-      if(isSuccess) {
-        this.nowRoute = data;
-        this.nowKey = Object.keys(data);
-      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.max-height {
+  max-height: 600px;
+  min-height: 300px;
+}
 
+.margin-top {
+  margin-top: 10px;
+}
 </style>

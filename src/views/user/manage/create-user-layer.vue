@@ -81,12 +81,9 @@ export default {
           title: '成功',
           message: '添加新用户成功～'
 				});
-				
-				return true;
-			}
-			else {
-				return false;
-			}
+      }
+      
+      return isSuccess;
     },
     uploadAvatar() {
       console.log(arguments)

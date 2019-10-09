@@ -50,6 +50,12 @@ export function getGroupList(data) {
   return fetch('/permission/getGroupList', { method: 'post', data: data });
 }
 
-export function getGroupRoute() {
-  return fetch('/permission/getGroupRoute');
+// 获取角色路由
+export function getGroupRoute(data) {
+  return fetch('/permission/getGroupRoute', { data: data });
+}
+
+// 设置角色路由
+export function setGroupRoute(data) {
+  return fetch('/permission/setGroupRoute', { method: 'post', data: data });
 }

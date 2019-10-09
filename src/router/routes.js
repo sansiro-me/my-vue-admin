@@ -81,7 +81,7 @@ const routes = [
   }
 ];
 
-const baseRoutes = [
+const base = [
   {
     path: 'home',
     name: 'home',
@@ -99,8 +99,46 @@ const baseRoutes = [
       name: '个人中心',
       hidden: true
     }
-  },
-  ...routes
+  }
 ];
 
-export default baseRoutes;
+const realRoute = [...base, ...routes];
+
+export default realRoute;
+
+export function getRealRoute(userRoute) {
+  console.log(Object.keys(userRoute));
+  console.log(routes);
+
+  let ins = JSON.parse(JSON.stringify(routes));
+
+  for(let j = 0; j < ins.length; j++) {
+    let item = ins[j];
+
+    // 有子节点，遍历子节点
+    if(item.children && item.children.length > 0) {
+      for(let i = 0; i < item.children.length; i++) {
+        // 如果子节点没有权限的话，就删掉
+        if(!Object.keys(userRoute).includes(item.children[i].name)) {
+          ins[j].children.splice(i, 1);
+          
+          i--;
+        }
+      }
+      // 如果所有子节点都没权限的话，父节点删掉
+      if(item.children && item.children.length < 1) {
+        ins.splice(j, 1);
+        j--;
+      }
+    }
+    // 没有子节点，也没有权限的话，就删掉
+    else if(!Object.keys(userRoute).includes(item.name)) {
+      ins.splice(j, 1);
+      j--;
+    }
+  }
+
+  ins = Object.values(ins);
+
+  return [...base, ...ins];
+}

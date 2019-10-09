@@ -4,7 +4,7 @@
 // import dynamicRouter from '@/router/dynamic-router'
 
 import { login, getUserInfo } from '@/request/permission'
-import routes from '@/router/routes'
+import { getRealRoute } from '@/router/routes'
 
 export default {
   namespaced: true,
@@ -28,6 +28,12 @@ export default {
     currentMenu: ''
   },
   getters: {
+    getMenu: {
+      root: true,
+      handler(state) {
+        return state.menuList
+      }
+    }
     // getToken: {
     //   root: true,
     //   handler() {
@@ -82,7 +88,7 @@ export default {
       state.crumbList = list
     },
     setMenuList(state, list) {
-      state.menuList = list
+      state.menuList = getRealRoute(list);
     },
     setCurrentMenu(state, currentMenu) {
       state.currentMenu = currentMenu
@@ -94,7 +100,7 @@ export default {
 
       if(isSuccess) {
         commit('setLoginInfo', data);
-        commit('setMenuList', routes);
+        commit('setMenuList', data.route);
         return true;
       }
       else {
@@ -105,7 +111,8 @@ export default {
       const { isSuccess, data } = await getUserInfo();
 
       if(isSuccess) {
-        commit('setUserInfo', data)
+        commit('setUserInfo', data);
+        commit('setMenuList', data.route);
       }
     }
   }
