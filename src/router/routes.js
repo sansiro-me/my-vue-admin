@@ -74,7 +74,7 @@ const routes = [
       },
       {
         path: 'route',
-        name: 'roure-manage',
+        name: 'route-manage',
         component:() => import('@/views/auth/router/router-manage'),
         meta: {
           name: '路由管理',
