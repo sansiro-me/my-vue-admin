@@ -24,6 +24,10 @@ router.beforeEach((to, from, next) => {
     next();
   }
   else if(store.state.permission.getToken) {
+    if(to.meta) {
+      store.dispatch('permission/setPageWrite', Boolean(to.meta.write));
+    }
+
     if(!store.state.permission.account) {
       store.dispatch('permission/getInfo').then(() => {
         // next();

@@ -26,7 +26,8 @@ export default {
     crumbList: [],
     menuList: [],
     currentMenu: '',
-    routes: []
+    routes: [],
+    isWrite: false
   },
   getters: {
     getMenu(state) {
@@ -34,6 +35,9 @@ export default {
     },
     getRoutes(state) {
       return state.routes;
+    },
+    getWrite(state) {
+      return state.isWrite;
     }
     // getMenu: {
     //   root: true,
@@ -102,6 +106,9 @@ export default {
     },
     saveRoutes(state, routes) {
       state.routes = routes
+    },
+    setPageWrite(state, isPer) {
+      state.isWrite = Boolean(isPer);
     }
   },
   actions: {
@@ -127,6 +134,9 @@ export default {
     },
     saveRoutes({ commit }, routes) {
       commit('saveRoutes', routes);
+    },
+    setPageWrite({ commit }, pper) {
+      commit('setPageWrite', pper);
     }
   }
 }

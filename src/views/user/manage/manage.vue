@@ -16,7 +16,7 @@
 
         <el-form-item>
           <el-button type="primary" size="medium" @click="onSubmit">查询</el-button>
-          <el-button size="medium" @click="addNewUser">新增用户</el-button>
+          <el-button size="medium" @click="addNewUser" v-if="haswrite">新增用户</el-button>
         </el-form-item>
       </el-form>
 
@@ -63,7 +63,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" width="150" v-if="haswrite">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -100,6 +100,11 @@ export default {
         total: 0,
         current: 0
       }
+    }
+  },
+  computed: {
+    haswrite() {
+      return this.$store.getters['permission/getWrite'];
     }
   },
   mounted() {

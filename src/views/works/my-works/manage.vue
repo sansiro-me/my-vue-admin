@@ -23,7 +23,7 @@
             </div>
             <div class="bottom clearfix">
               <time class="time">{{ item.createtime }}</time>
-              <el-dropdown trigger="click" @command="handleCommand">
+              <el-dropdown trigger="click" @command="handleCommand" v-if="haswrite">
                 <span class="el-dropdown-link">操作<i class="el-icon-arrow-down el-icon--right"></i></span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item icon="icon-arrow-down" :command="{ name: 'offline', obj: item.id }"  v-if="item.status == 1">下线作品</el-dropdown-item>
@@ -36,7 +36,7 @@
           </div>
         </el-card>
 
-        <div class="inline" @click="addWork">
+        <div class="inline" @click="addWork" v-if="haswrite">
           <el-card class="card add icon-plus" :body-style="{ padding: '0px' }" shadow="hover"></el-card>
         </div>
       </div>
@@ -52,6 +52,12 @@ export default {
     return {
       loading: false,
       worksList: []
+    }
+  },
+
+  computed: {
+    haswrite() {
+      return this.$store.getters['permission/getWrite'];
     }
   },
 

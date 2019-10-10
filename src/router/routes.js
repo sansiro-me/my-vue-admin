@@ -161,6 +161,16 @@ export function getRealRoute(userRoute) {
           
           i--;
         }
+        else
+        {
+          // 是否有写权限
+          if(userRoute[item.children[i].name].write) {
+            ins[j].children[i].meta.write = true;
+          }
+          else {
+            ins[j].children[i].meta.write = false;
+          }
+        }
       }
       // 如果所有子节点都没权限的话，父节点删掉
       if(item.children && item.children.length < 1) {

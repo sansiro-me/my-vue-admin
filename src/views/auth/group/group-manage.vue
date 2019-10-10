@@ -8,7 +8,7 @@
 
         <el-form-item>
           <el-button type="primary" size="medium" @click="onSubmit">查询</el-button>
-          <el-button size="medium" @click="addNewGroup">新增角色</el-button>
+          <el-button size="medium" @click="addNewGroup" v-if="haswrite">新增角色</el-button>
         </el-form-item>
       </el-form>
 
@@ -49,7 +49,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="220">
+        <el-table-column label="操作" width="220" v-if="haswrite">
           <template slot-scope="scope">
             <el-button size="mini">编辑</el-button>
             <el-button size="mini" type="warning" @click="gotoManage(scope.row.id)">管理</el-button>
@@ -84,6 +84,12 @@ export default {
         current: 0
       },
       loading: false
+    }
+  },
+
+  computed: {
+    haswrite() {
+      return this.$store.getters['permission/getWrite'];
     }
   },
 

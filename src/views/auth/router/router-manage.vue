@@ -40,6 +40,8 @@ export default {
   },
 
   mounted() {
+    console.log(this.$store.getters['permission/getWrite']);
+
     this.getPageInfo();
   },
 
