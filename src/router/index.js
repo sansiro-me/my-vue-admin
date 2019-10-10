@@ -3,34 +3,20 @@ import Router from 'vue-router'
 import store from '@/store'
 
 import Login from '@/views/login/login.vue'
-import menus from './routes'
-
-const menus2 = store.getters.getMenu;
-
-console.log(menus2);
 
 Vue.use(Router)
 
+const onlyLogin = [
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  }
+];
+
+// 初始路由
 const router = new Router({
-  routes: [
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/',
-      name: 'container',
-      component:() => import('@/components/Container.vue'),
-      redirect: 'home',
-      children: menus
-    },
-    {
-      path: '*',
-      name: 'not-found',
-      component: () => import('@/components/404.vue')
-    }
-  ]
+  routes: onlyLogin
 });
 
 router.beforeEach((to, from, next) => {
@@ -40,7 +26,13 @@ router.beforeEach((to, from, next) => {
   else if(store.state.permission.getToken) {
     if(!store.state.permission.account) {
       store.dispatch('permission/getInfo').then(() => {
-        next();
+        // next();
+
+        // console.log(store.getters['permission/getRoutes']);
+
+        // router.addRoutes(store.getters['permission/getRoutes']);
+
+        next({ ...to, replace: true })
       })
     }
     else {
@@ -58,6 +50,3 @@ router.afterEach((to) => {
 });
 
 export default router
-
-// export Object router;
-// export list;

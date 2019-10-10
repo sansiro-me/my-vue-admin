@@ -1,8 +1,12 @@
+import router from './index'
+import store from '@/store'
+
 import layout from '@/components/LayOut'
 
+// 需要权限控制的路由
 const routes = [
   {
-    path: 'user',
+    path: '/user',
     name: 'user',
     component: layout,
     meta: {
@@ -22,7 +26,7 @@ const routes = [
     ]
   },
   {
-    path: 'works',
+    path: '/works',
     name: 'works',
     component: layout,
     meta: {
@@ -33,7 +37,7 @@ const routes = [
       {
         path: 'manage',
         name: 'works-manage',
-        component:() => import('@/views/works/my-works/manage'),
+        component: () => import('@/views/works/my-works/manage'),
         meta: {
           name: '我的作品',
           icon: 'archive'
@@ -51,7 +55,7 @@ const routes = [
     ]
   },
   {
-    path: 'auth',
+    path: '/auth',
     name: 'auth',
     component: layout,
     meta: {
@@ -81,6 +85,41 @@ const routes = [
   }
 ];
 
+let needToAdd = [
+  {
+    path: '/',
+    name: 'container',
+    component:() => import('@/components/Container.vue'),
+    redirect: 'home',
+    children: [
+      {
+        path: 'home',
+        name: 'home',
+        component:() => import('@/views/home/home'),
+        meta: {
+          name: '首页',
+          icon: 'home'
+        }
+      },
+      {
+        path: 'user-center',
+        name: 'user-center',
+        component:() => import('@/views/user/center/center'),
+        meta: {
+          name: '个人中心',
+          hidden: true
+        }
+      }
+    ]
+  },
+  {
+    path: '*',
+    name: 'not-found',
+    component: () => import('@/components/404.vue')
+  }
+];
+
+// 需要添加，但是不用权限验证的路由
 const base = [
   {
     path: 'home',
@@ -102,15 +141,13 @@ const base = [
   }
 ];
 
-const realRoute = [...base, ...routes];
+const realRoute = [];//.concat(base, routes);
 
 export default realRoute;
 
 export function getRealRoute(userRoute) {
-  console.log(Object.keys(userRoute));
-  console.log(routes);
-
-  let ins = JSON.parse(JSON.stringify(routes));
+  // let ins = JSON.parse(JSON.stringify(routes));
+  let ins = routes;
 
   for(let j = 0; j < ins.length; j++) {
     let item = ins[j];
@@ -138,7 +175,16 @@ export function getRealRoute(userRoute) {
     }
   }
 
-  ins = Object.values(ins);
+  // ins 就是过滤之后，用户有权限的路由
+  // ins = Object.values(ins);
 
-  return [...base, ...ins];
+  needToAdd = needToAdd.concat(ins);
+
+  needToAdd[0].children = [].concat(base, ins);
+
+  store.dispatch('permission/saveRoutes', needToAdd);
+
+  router.addRoutes(needToAdd);
+
+  return [].concat(base, ins);
 }

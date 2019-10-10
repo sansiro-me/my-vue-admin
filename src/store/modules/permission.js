@@ -25,15 +25,22 @@ export default {
     },
     crumbList: [],
     menuList: [],
-    currentMenu: ''
+    currentMenu: '',
+    routes: []
   },
   getters: {
-    getMenu: {
-      root: true,
-      handler(state) {
-        return state.menuList
-      }
+    getMenu(state) {
+      return state.menuList;
+    },
+    getRoutes(state) {
+      return state.routes;
     }
+    // getMenu: {
+    //   root: true,
+    //   handler: (state) => {
+    //     return state.menuList
+    //   }
+    // }
     // getToken: {
     //   root: true,
     //   handler() {
@@ -93,6 +100,9 @@ export default {
     setCurrentMenu(state, currentMenu) {
       state.currentMenu = currentMenu
     },
+    saveRoutes(state, routes) {
+      state.routes = routes
+    }
   },
   actions: {
     async login({ commit }, obj) {
@@ -114,6 +124,9 @@ export default {
         commit('setUserInfo', data);
         commit('setMenuList', data.route);
       }
+    },
+    saveRoutes({ commit }, routes) {
+      commit('saveRoutes', routes);
     }
   }
 }
