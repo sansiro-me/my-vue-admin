@@ -1,143 +1,88 @@
 <template>
-  <el-container>
+  <el-container v-loading="loading">
     <el-main>
-      <el-tree
-        :data="data"
-        show-checkbox
-        default-expand-all
-        node-key="id"
-        ref="tree"
-        highlight-current
-        :indent="50"
-        :props="defaultProps">
-      </el-tree>
+      <div class="all-div">
+        <div class="left-div">
+          <h2 class="title">旧的路由</h2>
 
-      <el-button @click="showCurrent">calc</el-button>
-      <el-button @click="setShow">show</el-button>
-      <el-button @click="clear">clear</el-button>
+          <el-tree
+            :data="allRoutes"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            ref="tree"
+            highlight-current
+            :indent="50"
+            :props="defaultProps">
+          </el-tree>
+        </div>
+
+        <div class="right-div">
+          <h2 class="title">新的路由</h2>
+
+          <el-tree
+            :data="newRoutes"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            ref="tree"
+            highlight-current
+            :indent="50"
+            :props="defaultProps">
+          </el-tree>
+        </div>
+      </div>
+
+      <el-button @click="updateRouteToServer">同步本地路由到服务器</el-button>
     </el-main>
   </el-container>
 </template>
 
 <script>
-import { getRouteList, getGroupRoute } from "@/request/permission"
+import { getAllRoutes } from "@/request/permission"
 
 export default {
   data() {
     return {
-      form: {},
-      routeList: [],
-      data: [],
+      allRoutes: [],
+      newRoutes: [],
       defaultProps: {
         children: 'children',
         label: 'title'
       },
-      nowRoute: [],
-      nowKey: [],
-      showKey: [],
-      baseNum: 1
+      loading: false
+    }
+  },
+
+  computed: {
+    haswrite() {
+      return this.$store.getters['permission/getWrite'];
     }
   },
 
   mounted() {
-    console.log(this.$store.getters['permission/getWrite']);
-
-    this.getPageInfo();
+    this.getAllRoutes();
   },
 
   methods: {
-    clear() {
-      this.$refs.tree.setCheckedKeys([]);
-    },
-    setShow() {
-      this.$refs.tree.setCheckedKeys(this.showKey, true);
-      // console.log(this.$refs.tree.getCheckedNodes(true))
-    },
-    async getPageInfo() {
-      await this.getRouteList();
-      await this.getNowRoute();
+    async getAllRoutes() {
+      this.loading = true;
+      const { isSuccess, data } = await getAllRoutes();
 
-      this.addNumToNode(this.routeList);
-
-      this.data = this.routeList;
-
-      this.$refs.tree.setCheckedKeys(this.showKey, true);
-    },
-    addNumToNode(node) {
-      if(node instanceof Array) {
-        for(let i = 0; i < node.length; i++) {
-          this.addNumToNode(node[i]);
-        }
-      }
-      else if(node instanceof Object) {
-        node.id = this.baseNum;
-        this.baseNum++;
-
-        // if (node.name && this.nowKey.includes(node.name)) {
-        //   this.showKey.push(node.id);
-        // }
-
-        if (node.parent && this.nowKey.includes(node.parent) && this.nowRoute[node.parent][node.name]) {
-          this.showKey.push(node.id);
-        }
-
-        if(node.children && node.children.length > 0) {
-          this.addNumToNode(node.children);
-        }
-      }
-    },
-    showCurrent() {
-      // console.log(this.$refs.tree.getCheckedNodes(true));
-      let nowTree = this.$refs.tree.getCheckedNodes(true);
-      let res = {};
-
-      for(let i = 0; i < nowTree.length; i++) {
-        if(res[nowTree[i].parent]) {
-          res[nowTree[i].parent][nowTree[i].name] = true;
-        }
-        else {
-          res[nowTree[i].parent] = {};
-          res[nowTree[i].parent][nowTree[i].name] = true;
-        }
-      }
-
-      console.log(res);
-    },
-    async getRouteList() {
-      const { isSuccess, data } = await getRouteList();
+      this.loading = false;
 
       if(isSuccess) {
-        // console.log(data);
-        this.routeList = this.calcRouteTree(data);
+        this.allRoutes = data;
       }
     },
-    calcRouteTree(data) {
-      for (let i = 0; i < data.length; i++) {
-        if(data[i].children && data[i].children.length > 0) {
-          for (let j = 0; j < data[i].children.length; j++) {
-            if(data[i].children[j].children && data[i].children[j].children.length) {
-              for (let k = 0; k < data[i].children[j].children.length; k++) {
-                data[i].children[j].children[k].parent = data[i].children[j].name;
-              }
-            }
-            else {
-              data[i].children[j].parent = data[i].name;
-            }
-          }
-        }
-        else {
-          
-        }
-      }
+    async updateRouteToServer() {
+      this.loading = true;
+      const { isSuccess, data } = await this.$store.dispatch('permission/updateRoute');
 
-      return data;
-    },
-    async getNowRoute() {
-      const { isSuccess, data } = await getGroupRoute();
+      this.loading = false;
 
-      if(isSuccess) {
-        this.nowRoute = data;
-        this.nowKey = Object.keys(data);
+      if (isSuccess) {
+        this.newRoutes = data;
       }
     }
   }
@@ -145,5 +90,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.all-div {
+  width: 100%;
+  position: relative;
+  display: inline-block;
+  font-size: 0;
+  margin-bottom: 20px;
 
+  & > div {
+    display: inline-block;
+    width: 50%;
+
+    height: 100%;
+    font-size: 16px;
+    vertical-align: top;
+    padding: 0 20px;
+  }
+
+  .left-div {
+    // background-color: #fff4f4;
+  // background-color: #f8f8f8;
+    border-right: 1px solid #919191;
+  }
+
+  // .right-div {
+  //   background-color: #ceffce;
+  // }
+}
+
+.el-tree {
+  background-color: unset;
+}
+
+.title {
+  margin-bottom: 10px;
+}
 </style>

@@ -1,19 +1,15 @@
-// import { fetchPermission } from '@/api/permission'
-// import router, { DynamicRoutes } from '@/router/index'
-// import { recursionRouter } from '@/utils/recursion-router'
-// import dynamicRouter from '@/router/dynamic-router'
-
-import { login, getUserInfo } from '@/request/permission'
+import { login, getUserInfo, updateRouteToServer } from '@/request/permission'
 import { getRealRoute } from '@/router/routes'
+import routes from '@/router/children'
 
 export default {
   namespaced: true,
   state: {
-    permissionList: null /** 所有路由 */,
-    sidebarMenu: [] /** 导航菜单 */,
-    // currentMenu: '' /** 当前active导航菜单 */,
-    control_list: [] /** 完整的权限列表 */,
-    // avatar: ''/** 头像 */,
+    // permissionList: null /** 所有路由 */,
+    // sidebarMenu: [] /** 导航菜单 */,
+    // // currentMenu: '' /** 当前active导航菜单 */,
+    // control_list: [] /** 完整的权限列表 */,
+    // // avatar: ''/** 头像 */,
 
     account: '',
     avatar: '',
@@ -27,7 +23,8 @@ export default {
     menuList: [],
     currentMenu: '',
     routes: [],
-    isWrite: false
+    isWrite: false,
+    allRoutes: []
   },
   getters: {
     getMenu(state) {
@@ -39,42 +36,8 @@ export default {
     getWrite(state) {
       return state.isWrite;
     }
-    // getMenu: {
-    //   root: true,
-    //   handler: (state) => {
-    //     return state.menuList
-    //   }
-    // }
-    // getToken: {
-    //   root: true,
-    //   handler() {
-    //     return localStorage.getItem('token')
-    //   }
-    // }
   },
   mutations: {
-    SET_AVATAR(state, avatar) {
-      state.avatar = avatar
-    },
-    SET_ACCOUNT(state, account) {
-      state.account = account
-    },
-    SET_PERMISSION(state, routes) {
-      state.permissionList = routes
-    },
-    CLEAR_PERMISSION(state) {
-      state.permissionList = null
-    },
-    SET_MENU(state, menu) {
-      state.sidebarMenu = menu
-    },
-    CLEAR_MENU(state) {
-      state.sidebarMenu = []
-    },
-    SET_CONTROL_LIST(state, list) {
-      state.control_list = list
-    },
-
     setUserInfo(state, info) {
       state.userid = info.id;
       state.avatar = info.avatar;
@@ -109,6 +72,9 @@ export default {
     },
     setPageWrite(state, isPer) {
       state.isWrite = Boolean(isPer);
+    },
+    recordAllRoutes(state) {
+      state.allRoutes = JSON.parse(JSON.stringify(routes));
     }
   },
   actions: {
@@ -116,6 +82,7 @@ export default {
       const { isSuccess, data } = await login(obj);
 
       if(isSuccess) {
+        commit('recordAllRoutes');
         commit('setLoginInfo', data);
         commit('setMenuList', data.route);
         return true;
@@ -128,6 +95,7 @@ export default {
       const { isSuccess, data } = await getUserInfo();
 
       if(isSuccess) {
+        commit('recordAllRoutes');
         commit('setUserInfo', data);
         commit('setMenuList', data.route);
       }
@@ -137,6 +105,45 @@ export default {
     },
     setPageWrite({ commit }, pper) {
       commit('setPageWrite', pper);
+    },
+    async updateRoute({state}) {
+      let postRoutes = JSON.parse(JSON.stringify(state.allRoutes));
+
+      postRoutes.forEach(item => {
+        // 如果不是叶子节点
+        if (item.children && item.children.length > 0) {
+          item.title = item.meta.name;
+
+          delete(item.component);
+          delete(item.meta);
+          delete(item.name);
+          delete(item.path);
+
+          item.children.forEach(todo => {
+            todo.title = todo.meta.name;
+
+            delete(todo.component);
+            delete(todo.meta);
+            delete(todo.path);
+          })
+        }
+        // 如果是叶子节点。因为规定路由只能有两级。所以用不着递归
+        else {
+          item.title = item.meta.name;
+
+          delete(item.component);
+          delete(item.meta);
+          delete(item.path);
+        }
+      })
+
+      const result = await updateRouteToServer({
+        routes: postRoutes
+      });
+
+      console.log(result);
+
+      return result;
     }
   }
 }

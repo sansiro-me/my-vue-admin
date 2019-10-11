@@ -40,11 +40,6 @@ export function changePasswd(data) {
   return fetch('/permission/changePasswd', { method: 'post', data: data });
 }
 
-// 获取路由表
-export function getRouteList() {
-  return fetch('/permission/getRouteList');
-}
-
 // 获取角色列表
 export function getGroupList(data) {
   return fetch('/permission/getGroupList', { method: 'post', data: data });
@@ -58,4 +53,14 @@ export function getGroupRoute(data) {
 // 设置角色路由
 export function setGroupRoute(data) {
   return fetch('/permission/setGroupRoute', { method: 'post', data: data });
+}
+
+// 获取全部的路由表
+export function getAllRoutes() {
+  return fetch('/permission/getAllRoutes');
+}
+
+// 同步本地路由到服务器，不需要服务器配置新路由，直接本地路由表过滤后同步到服务器
+export function updateRouteToServer(data) {
+  return fetch('/permission/updateRoutes', { method: 'post', data: data });
 }
