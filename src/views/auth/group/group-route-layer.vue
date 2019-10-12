@@ -141,18 +141,19 @@ export default {
       for (let i = 0; i < data.length; i++) {
         if(data[i].children && data[i].children.length > 0) {
           for (let j = 0; j < data[i].children.length; j++) {
-            if(data[i].children[j].children && data[i].children[j].children.length) {
-              for (let k = 0; k < data[i].children[j].children.length; k++) {
-                data[i].children[j].children[k].parent = data[i].children[j].name;
-              }
-            }
-            else {
-              data[i].children[j].parent = data[i].name;
+            if(data[i].children[j].name) {
+              data[i].children[j].children = [
+                { title: '只读', name: 'read', parent: data[i].children[j].name },
+                { title: '读写', name: 'write', parent: data[i].children[j].name }
+              ];
             }
           }
         }
         else {
-          
+          data[i].children = [
+            { title: '只读', name: 'read', parent: data[i].name },
+            { title: '读写', name: 'write', parent: data[i].name }
+          ];
         }
       }
 

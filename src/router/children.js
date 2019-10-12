@@ -78,5 +78,14 @@ export default [
         }
       }
     ]
-  }
+  },
+  {
+    path: '22-manage',
+    name: 'test-manage',
+    component:() => import('@/views/auth/group/group-manage'),
+    meta: {
+      name: 'cece管理',
+      icon: 'users'
+    }
+  },
 ];

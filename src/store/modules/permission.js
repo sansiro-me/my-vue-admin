@@ -74,7 +74,40 @@ export default {
       state.isWrite = Boolean(isPer);
     },
     recordAllRoutes(state) {
-      state.allRoutes = JSON.parse(JSON.stringify(routes));
+      // state.allRoutes = JSON.parse(JSON.stringify(routes));
+
+      let record = JSON.parse(JSON.stringify(routes));
+      console.log(record);
+
+      record.forEach(item => {
+        // 如果不是叶子节点
+        if (item.children && item.children.length > 0) {
+          item.title = item.meta.name;
+
+          delete(item.component);
+          delete(item.meta);
+          delete(item.name);
+          delete(item.path);
+
+          item.children.forEach(todo => {
+            todo.title = todo.meta.name;
+
+            delete(todo.component);
+            delete(todo.meta);
+            delete(todo.path);
+          })
+        }
+        // 如果是叶子节点。因为规定路由只能有两级。所以用不着递归
+        else {
+          item.title = item.meta.name;
+
+          delete(item.component);
+          delete(item.meta);
+          delete(item.path);
+        }
+      });
+
+      state.allRoutes = record;
     }
   },
   actions: {
@@ -107,42 +140,10 @@ export default {
       commit('setPageWrite', pper);
     },
     async updateRoute({state}) {
-      let postRoutes = JSON.parse(JSON.stringify(state.allRoutes));
-
-      postRoutes.forEach(item => {
-        // 如果不是叶子节点
-        if (item.children && item.children.length > 0) {
-          item.title = item.meta.name;
-
-          delete(item.component);
-          delete(item.meta);
-          delete(item.name);
-          delete(item.path);
-
-          item.children.forEach(todo => {
-            todo.title = todo.meta.name;
-
-            delete(todo.component);
-            delete(todo.meta);
-            delete(todo.path);
-          })
-        }
-        // 如果是叶子节点。因为规定路由只能有两级。所以用不着递归
-        else {
-          item.title = item.meta.name;
-
-          delete(item.component);
-          delete(item.meta);
-          delete(item.path);
-        }
-      })
-
       const result = await updateRouteToServer({
-        routes: postRoutes
+        routes: state.allRoutes
       });
-
-      console.log(result);
-
+      
       return result;
     }
   }

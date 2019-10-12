@@ -67,6 +67,8 @@ export default {
   methods: {
     async getAllRoutes() {
       this.loading = true;
+
+      this.newRoutes = this.$store.state.permission.allRoutes;
       const { isSuccess, data } = await getAllRoutes();
 
       this.loading = false;
@@ -77,12 +79,15 @@ export default {
     },
     async updateRouteToServer() {
       this.loading = true;
-      const { isSuccess, data } = await this.$store.dispatch('permission/updateRoute');
+      const { isSuccess } = await this.$store.dispatch('permission/updateRoute');
 
       this.loading = false;
 
       if (isSuccess) {
-        this.newRoutes = data;
+        this.$notify.success({
+          title: '成功',
+          message: '修改成功～'
+				});
       }
     }
   }
