@@ -84,6 +84,7 @@ export default {
       this.loading = false;
 
       if (isSuccess) {
+        this.getAllRoutes();
         this.$notify.success({
           title: '成功',
           message: '修改成功～'

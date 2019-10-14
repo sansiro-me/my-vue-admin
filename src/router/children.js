@@ -2,23 +2,50 @@ import layout from '@/components/LayOut'
 
 export default [
   {
-    path: '/user',
-    name: 'user',
+    path: '/auth',
+    name: 'auth',
     component: layout,
     meta: {
-      name: '用户管理',
-      icon: 'shopping-bag'
+      name: '权限控制',
+      icon: 'toggle-left'
     },
     children: [
       {
-        path: 'manage',
+        path: 'user',
         name: 'user-manage',
         component:() => import('@/views/user/manage/manage'),
         meta: {
           name: '用户列表',
           icon: 'eye'
         }
-      }
+      },
+      {
+        path: 'manage',
+        name: 'auth-manage',
+        component:() => import('@/views/auth/group/group-manage'),
+        meta: {
+          name: '角色管理',
+          icon: 'users'
+        }
+      },
+      {
+        path: 'route',
+        name: 'route-manage',
+        component:() => import('@/views/auth/router/router-manage'),
+        meta: {
+          name: '路由管理',
+          icon: 'map',
+        }
+      },
+      // {
+      //   path: 'interface',
+      //   name: 'interface-manage',
+      //   component:() => import('@/views/auth/interface/interface'),
+      //   meta: {
+      //     name: '接口管理',
+      //     icon: 'repeat',
+      //   }
+      // }
     ]
   },
   {
@@ -49,43 +76,5 @@ export default [
         }
       }
     ]
-  },
-  {
-    path: '/auth',
-    name: 'auth',
-    component: layout,
-    meta: {
-      name: '权限控制',
-      icon: 'toggle-left'
-    },
-    children: [
-      {
-        path: 'manage',
-        name: 'auth-manage',
-        component:() => import('@/views/auth/group/group-manage'),
-        meta: {
-          name: '角色管理',
-          icon: 'users'
-        }
-      },
-      {
-        path: 'route',
-        name: 'route-manage',
-        component:() => import('@/views/auth/router/router-manage'),
-        meta: {
-          name: '路由管理',
-          icon: 'map',
-        }
-      }
-    ]
-  },
-  {
-    path: '22-manage',
-    name: 'test-manage',
-    component:() => import('@/views/auth/group/group-manage'),
-    meta: {
-      name: 'cece管理',
-      icon: 'users'
-    }
   },
 ];
